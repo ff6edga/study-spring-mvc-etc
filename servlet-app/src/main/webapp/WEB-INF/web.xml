@@ -5,6 +5,21 @@
 <web-app>
   <display-name>Archetype Created Web Application</display-name>
 
+  <filter>
+    <filter-name>myFilter</filter-name>
+    <filter-class>study.spring.mvc.MyFilter</filter-class>
+  </filter>
+
+  <filter-mapping>
+    <filter-name>myFilter</filter-name>
+    <servlet-name>hello</servlet-name>
+    <!-- filter가 많은 서블릿에 적용된다면 servlet-name 대신 url-pattern이 쓰일 수도 있겠다.-->
+  </filter-mapping>
+
+  <listener>
+    <listener-class>study.spring.mvc.MyListener</listener-class>
+  </listener>
+
   <servlet>
     <servlet-name>hello</servlet-name>
     <servlet-class>study.spring.mvc.HelloServlet</servlet-class>
