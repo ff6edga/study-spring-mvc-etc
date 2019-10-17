@@ -13,6 +13,10 @@ import javax.servlet.http.HttpServletResponse;
 public class SimpleController implements Controller {
 	@Override
 	public ModelAndView handleRequest(HttpServletRequest request, HttpServletResponse response) throws Exception {
-		return new ModelAndView("/WEB-INF/simple.jsp");
+		//WebConfig에 새로 등록한 InternalResourceViewResolver에서
+		//prefix / suffix 를 새로 추가하였다
+		//return new ModelAndView("/WEB-INF/simple.jsp");
+		return new ModelAndView("/simple");
+
 	}
 }
