@@ -1,3 +1,4 @@
+
 <!DOCTYPE web-app PUBLIC
         "-//Sun Microsystems, Inc.//DTD Web Application 2.3//EN"
         "http://java.sun.com/dtd/web-app_2_3.dtd" >
@@ -16,34 +17,26 @@
     <param-value>study.spring.mvc.AppConfig</param-value>
   </context-param>
 
-  <filter>
-    <filter-name>myFilter</filter-name>
-    <filter-class>study.spring.mvc.MyFilter</filter-class>
-  </filter>
-
-  <filter-mapping>
-    <filter-name>myFilter</filter-name>
-    <servlet-name>hello</servlet-name>
-    <!-- filter가 많은 서블릿에 적용된다면 servlet-name 대신 url-pattern이 쓰일 수도 있겠다.-->
-  </filter-mapping>
-
-  <!--<listener>-->
-  <!--<listener-class>study.spring.mvc.MyListener</listener-class>-->
-  <!--</listener>-->
-
   <listener>
     <!-- ContextLoaderListener가 AppConfig설정을 가지고 Annotation ~~ Context를 만든다.-->
     <listener-class>org.springframework.web.context.ContextLoaderListener</listener-class>
   </listener>
 
   <servlet>
-    <servlet-name>hello</servlet-name>
-    <servlet-class>study.spring.mvc.HelloServlet</servlet-class>
+    <servlet-name>app</servlet-name>
+    <servlet-class>org.springframework.web.servlet.DispatcherServlet</servlet-class>
+    <init-param>
+      <param-name>contextClass</param-name>
+      <param-value>org.springframework.web.context.support.AnnotationConfigWebApplicationContext</param-value>
+    </init-param>
+    <init-param>
+      <param-name>contextConfigLocation</param-name>
+      <param-value>study.spring.mvc.WebConfig</param-value>
+    </init-param>
   </servlet>
 
   <servlet-mapping>
-    <servlet-name>hello</servlet-name>
-    <url-pattern>/hello</url-pattern>
+    <servlet-name>app</servlet-name>
+    <url-pattern>/app/*</url-pattern>
   </servlet-mapping>
 </web-app>
-

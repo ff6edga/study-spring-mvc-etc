@@ -10,11 +10,22 @@ import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.MediaType;
+import org.springframework.oxm.Marshaller;
 import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.test.web.servlet.MockMvc;
+import org.springframework.test.web.servlet.result.HeaderResultMatchers;
 
+import javax.xml.transform.Result;
+import javax.xml.transform.stream.StreamResult;
+import java.io.StringWriter;
+
+import static org.hamcrest.Matchers.containsString;
+import static org.hamcrest.Matchers.hasItems;
+import static org.hamcrest.collection.IsIterableContainingInOrder.contains;
 import static org.junit.jupiter.api.Assertions.*;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.head;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.options;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
@@ -33,6 +44,16 @@ class SampleControllerTest {
 	@Autowired
 	ObjectMapper objectMapper;
 
+	@Autowired
+	Marshaller marshaller;
+
+	@Test
+	public void helloTest() throws Exception {
+		mockMvc.perform(get("/hello"))
+				.andDo(print())
+				.andExpect(status().isOk());
+	}
+
 	@Test
 	void jsonMessage() throws Exception {
 		Person person = new Person();
@@ -50,6 +71,27 @@ class SampleControllerTest {
 				.andExpect(jsonPath("$.id").value(2019))
 				.andExpect(jsonPath("$.name").value("younsoo"));
 
+	}
+
+	@Test
+	void xmlMessage() throws Exception {
+		Person person = new Person();
+		person.setId(2019L);
+		person.setName("younsoo");
+
+		StringWriter stringWriter = new StringWriter();
+		Result result = new StreamResult(stringWriter);
+		marshaller.marshal(person, result);
+		String xmlString = stringWriter.toString();
+
+		this.mockMvc.perform(get("/xmlMessage")
+				.contentType(MediaType.APPLICATION_XML)
+				.accept(MediaType.APPLICATION_XML)
+				.content(xmlString))
+				.andDo(print())
+				.andExpect(status().isOk())
+				.andExpect(xpath("person/name").string("younsoo"))
+				.andExpect(xpath("person/id").string("2019"));
 	}
 
 	@Test

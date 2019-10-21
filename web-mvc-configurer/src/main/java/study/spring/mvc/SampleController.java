@@ -1,15 +1,20 @@
 package study.spring.mvc;
 
+import org.springframework.http.HttpHeaders;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
 public class SampleController {
 
-	@GetMapping("/hello")
-	//@GetMapping("/hello/{name}")
-//	public String hello(@PathVariable("name") Person person) {
-	public String hello(@RequestParam("id") Person person) {
-		return "hello " + person.getName();
+	//@GetMapping(value = "/hello")
+	@GetHelloMapping
+	public String hello() {
+		return "hello";
+	}
+
+	@PostMapping(value = "/hello")
+	public String helloPost() {
+		return "hello";
 	}
 
 	@GetMapping("/message")
@@ -17,7 +22,7 @@ public class SampleController {
 		return body;
 	}
 
-	@GetMapping("/jsonMessage")
+	@GetMapping("/xmlMessage")
 	public Person jsonMessage(@RequestBody Person person) {
 		return person;
 	}
